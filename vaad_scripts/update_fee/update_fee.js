@@ -2,9 +2,10 @@ const THREE_BEDROOM_APARTMENT_PAYMENT = 255;
 const FOUR_BEDROOM_APARTMENT_PAYMENT = 323;
 const FIVE_BEDROOM_APARTMENT_PAYMENT = 383;
 const PENTHOUSES_PAYMENT = 482;
-const INTERVAL_BETWEEN_REQUESTS_IN_MS = 10000 // 10 seconds 
-
+const INTERVAL_BETWEEN_REQUESTS_IN_MS = 10000; // 10 seconds
 const TOKEN = 'ENTER_YOUR_TOKEN_HERE';
+const FROM_DATE = '2019-10-01';
+const DATE_TO = '2025-12-01';
 
 const threeBedroomApartmentNumbers = [1, 2];
 const fourBedroomApartmentNumbers = Array.from({ length: 30 }, (_, index) => index * 2 + 3);
@@ -54,15 +55,8 @@ function createHeaders() {
   return headers;
 }
 
-const combinedArray = [
-  ...threeBedroomApartmentNumbers,
-  ...fourBedroomApartmentNumbers,
-  ...fiveBedroomApartmentNumbers,
-  ...penthousesNumbers
-];
-
 function generateApartmentPaymentRequestOptions(params) {
-  const { dateFrom = '2019-10-01', dateTo = '2025-12-01', payment, apartmentNumber } = params;
+  const { dateFrom = FROM_DATE, dateTo = DATE_TO, payment, apartmentNumber } = params;
   const urlencoded = new URLSearchParams();
   const headers = createHeaders();
   urlencoded.append('_token', TOKEN);
@@ -94,7 +88,6 @@ async function setPayment(requestOptions) {
   return response;
 }
 const requestOptionsArray = allHouses.map(generateApartmentPaymentRequestOptions);
-
 
 requestOptionsArray.every((requestOptions, i) =>
   setTimeout(() => setPayment(requestOptions), INTERVAL_BETWEEN_REQUESTS_IN_MS * i)
